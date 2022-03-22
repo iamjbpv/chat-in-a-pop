@@ -6,6 +6,8 @@ import { newMessage } from "../redux/actions/messages";
 import socketIOClient from "socket.io-client";
 import SocketContext from "../socket/socket-context";
 
+import serverConfig from '../.env.json';
+
 const PublishMessage = (props) => {
   const pubSubCtx = useContext(PubSubContext);
   const socketCtx = useContext(SocketContext);
@@ -17,7 +19,7 @@ const PublishMessage = (props) => {
   const { username } = props;
 
   useEffect(() => {
-    const newSocket = socketIOClient(`http://localhost:3000`);
+    const newSocket = socketIOClient(serverConfig.socketServerHost);
     setSocket(newSocket);
     return () => newSocket.close();
   }, [setSocket]);

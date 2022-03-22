@@ -7,8 +7,10 @@ import MessageBoard from "./components/MessageBoard";
 import SetUsername from "./components/SetUsername";
 import socketIOClient from "socket.io-client";
 import { socketAction } from "./redux/actions/socketaction";
-const ENDPOINT = "http://localhost:3000";
-const socket = socketIOClient(ENDPOINT);
+
+import serverConfig from './.env.json';
+
+const socket = socketIOClient(serverConfig.socketServerHost);
 
 const App = (props) => {
   const { username, messages, socketAction } = props;

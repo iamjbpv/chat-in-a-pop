@@ -2,13 +2,13 @@ import { connect } from "react-redux";
 
 import socketIOClient from "socket.io-client";
 import SocketContext from "./socket-context";
-const ENDPOINT = "http://localhost:3000";
+import serverConfig from '../.env.json';
 
 const SocketProvider = (props) => {
   const { messages } = props;
 
   const { store } = props;
-  const socket = socketIOClient(ENDPOINT);
+  const socket = socketIOClient(serverConfig.socketServerHost);
 
 
 
