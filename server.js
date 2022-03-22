@@ -1,4 +1,4 @@
-require('dotenv').config()
+require("dotenv").config();
 const express = require("express");
 const http = require("http").Server(express);
 const io = require("socket.io")(http, { cors: { origin: "*" } });
@@ -10,9 +10,15 @@ app.use(express.static(path.join(__dirname, "build"))); //production location of
 
 io.on("connection", (socket) => {
   socket.on("chat message", (msg) => {
-  console.log(msg);
+    console.log(msg);
 
     io.emit("chat message", msg);
+  });
+
+  // reaction message
+  socket.on("reaction message", (msg) => {
+    console.log(msg);
+    io.emit("reaction message", msg);
   });
 });
 

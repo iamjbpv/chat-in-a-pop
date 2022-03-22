@@ -17,7 +17,7 @@ const App = (props) => {
   console.log("before effect", messages);
 
   useEffect(() => {
-    const messageListener = (msg) => {
+    const chatMessageListener = (msg) => {
       const senderIsMe = msg.item.username === username;
       console.log(senderIsMe);
       if (senderIsMe === false) {
@@ -25,10 +25,22 @@ const App = (props) => {
       }
     };
 
-    socket.on("chat message", messageListener);
+    const reactionMessageListener = (msg) => {
+      const senderIsMe = msg.item.username === username;
+      console.log(senderIsMe);
+      console.log('reaction',msg)
+      if (senderIsMe === false) {
+        socketAction(msg);
+      }
+    };
+
+    socket.on("chat message", chatMessageListener);
+    socket.on("reaction message", reactionMessageListener);
+
 
     return () => {
-      socket.off("chat message", messageListener);
+      socket.off("chat message", chatMessageListener);
+      socket.off("reaction message", reactionMessageListener);
     };
   }, [socket, username]);
 

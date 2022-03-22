@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { Fragment, useState } from "react";
 import { connect } from "react-redux";
 import CreateReaction from "./CreateReaction";
 import Modal from "react-bootstrap/Modal";
@@ -63,11 +63,9 @@ const MessageReactions = ({ messageReactions }) => {
   );
 };
 
-const MessageBoard = ({ messages, reactions }) => {
-  // = ({ messages, reactions }) =>
-
-  return (
-    <div className="w-100">
+const MessageBoard = ({ messages, reactions, myUserName }) => {
+  const content = (
+    <Fragment>
       {messages.items.map((messageItem, index) => {
         const { id, text, timestamp, username } = messageItem;
 
@@ -78,37 +76,54 @@ const MessageBoard = ({ messages, reactions }) => {
             key={id}
           >
             <div className="d-flex w-100 justify-content-start px-2 py-1">
-              <div className="mt-2">
-                <div className="profile-img text-center">
-                  {username && username.charAt(0)}
-                </div>
-              </div>
-              <div className="mt-2 mr-auto px-2 text-left">
-                <p className="my-auto user-text">{username}</p>
-                <p className="chat-text my-auto text-left">{text}</p>
-                <small className="chat-date">
-                  {new Date(timestamp).toDateString()}
-                </small>
-              </div>
-              <div className="">
-                <CreateReaction messageId={id} />
-                <MessageReactions messageReactions={reactions[id]} />
-              </div>
-            </div>
-            <div className="d-flex w-100 justify-content-start">
-              <div className="mr-auto"></div>
-              <div className="d-flex justify-content-start"></div>
+              {myUserName == username && (
+                <Fragment>
+                  <div className="">
+                    <CreateReaction messageId={id} meUser={true} />
+                    <MessageReactions messageReactions={reactions[id]} />
+                  </div>
+                  <div className="mt-2 ml-auto px-2 text-right">
+                    <p className="my-auto user-text">{username}</p>
+                    <p className="chat-text my-auto text-right">{text}</p>
+                    <small className="chat-date">
+                      {new Date(timestamp).toDateString()}
+                    </small>
+                  </div>
+                </Fragment>
+              )}
+              {myUserName != username && (
+                <Fragment>
+                  <div className="mt-2">
+                    <div className="profile-img text-center">
+                      {username && username.charAt(0)}
+                    </div>
+                  </div>
+                  <div className="mt-2 mr-auto px-2 text-left">
+                    <p className="my-auto user-text">{username}</p>
+                    <p className="chat-text my-auto text-left">{text}</p>
+                    <small className="chat-date">
+                      {new Date(timestamp).toDateString()}
+                    </small>
+                  </div>
+                  <div className="">
+                    <CreateReaction messageId={id} />
+                    <MessageReactions messageReactions={reactions[id]} />
+                  </div>
+                </Fragment>
+              )}
             </div>
           </div>
         );
       })}
-    </div>
+    </Fragment>
   );
+  return <div className="w-100">{content}</div>;
 };
 
 const mapStateToProps = (state) => ({
   messages: state.messages,
   reactions: state.reactions,
+  myUserName: state.username,
 });
 
 export default connect(mapStateToProps, null)(MessageBoard);
